@@ -3,9 +3,10 @@ type LoginResponse = {
   token: string;
 }
 
-export async function Login(context: Context, parms: CustomQuery): Promise<LoginResponse> {
+export async function login(context: Context, parms: CustomQuery): Promise<LoginResponse> {
   const { username, password } = parms;
-  console.log(222222, username, password);
+
+  // console.log(222222, username, password);
   // Create URL object containing full endpoint URL
   const url = new URL('/mall/member/login', context.config.api.url);
 

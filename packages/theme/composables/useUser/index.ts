@@ -67,15 +67,27 @@ export function useUser(): UseUserInterface {
 
   // eslint-disable-next-line @typescript-eslint/require-await,no-empty-pattern
   const login = async (user: any): Promise<void> => {
-    const { username, password } = user.user;
-    console.log('login=======', user, username, password);
+    try {
+      loading.value = true;
+      const { username, password } = user.user;
+      const data = await app.$vsf.$xbuy.api.login({ username, password });
+      console.log('收到登录结果：', data);
 
-    const data = await app.$vsf.$xbuy.api.Login({ username, password });
-    console.log('收到登录结果：', data);
-    if (data && data.token) {
-      const customerStore = useCustomerStore();
-      customerStore.setToken(data.token);
-      customerStore.setIsLoggedIn(true);
+      if (data && data.token) {
+        const customerStore = useCustomerStore();
+        customerStore.setToken(data.token);
+        customerStore.setIsLoggedIn(true);
+
+        console.log('aaaaaa', app, app.context.$vsf.$xbuy);
+        const apiState = app.$vsf.$xbuy.config.state;
+        console.log('zzzzz', apiState);
+
+        apiState.setCustomerToken(data.token);
+      }
+    } catch (err) {
+      error.value.login = err;
+    } finally {
+      loading.value = false;
     }
   };
 
