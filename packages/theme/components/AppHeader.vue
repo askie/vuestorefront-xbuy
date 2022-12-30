@@ -18,7 +18,13 @@
         <LocaleSelector class="smartphone-only" />
       </template>
       <template #header-icons>
-        <div v-e2e="'header-icons'" class="sf-header__icons">
+        <div v-if="!isAuthenticated" v-e2e="'header-icons'" class="sf-header__icons">
+          <SfButton class="sf-button--pure sf-header__action" aria-label="Open account button"
+            @click="handleLoginClick">
+            <SfIcon icon="login" size="1.25rem" />
+          </SfButton>
+        </div>
+        <div v-if="isAuthenticated" v-e2e="'header-icons'" class="sf-header__icons">
           <SfButton class="sf-button--pure sf-header__action" aria-label="Open account button"
             @click="handleAccountClick">
             <SfIcon :icon="accountIcon" size="1.25rem" />
@@ -31,6 +37,9 @@
             @click="toggleCartSidebar">
             <SfIcon class="sf-header__icon" icon="empty_cart" size="1.25rem" />
             <SfBadge v-if="cartTotalItems" class="sf-badge--number cart-badge">{{ cartTotalItems }}</SfBadge>
+          </SfButton>
+          <SfButton class="sf-button--pure sf-header__action" aria-label="Logout button" @click="handleLogoutClick">
+            <SfIcon icon="logout" size="1.25rem" />
           </SfButton>
         </div>
       </template>
@@ -97,7 +106,7 @@ export default {
     const router = useRouter();
     const { toggleCartSidebar, toggleWishlistSidebar, toggleLoginModal, isMobileMenuOpen } = useUiState();
     const { setTermForUrl, getFacetsFromURL } = useUiHelpers();
-    const { isAuthenticated } = useUser();
+    const { isAuthenticated, logout } = useUser();
     const { cart } = useCart();
     const term = ref(getFacetsFromURL().phrase);
     const isSearchOpen = ref(false);
@@ -110,16 +119,26 @@ export default {
       return count ? count.toString() : null;
     });
 
-    const accountIcon = computed(() => isAuthenticated ? 'profile_fill' : 'profile');
+    const accountIcon = computed(() => isAuthenticated.value ? 'profile_fill' : 'profile');
 
     // TODO: https://github.com/DivanteLtd/vue-storefront/issues/4927
     const handleAccountClick = async () => {
-      if (isAuthenticated) {
+      console.log('zzzzzzzzzz', isAuthenticated);
+      if (isAuthenticated.value) {
         const localeAccountPath = root.localePath({ name: 'my-account' });
         return router.push(localeAccountPath);
-      } else {
-        toggleLoginModal();
       }
+      toggleLoginModal();
+    };
+
+    const handleLoginClick = async () => {
+      toggleLoginModal();
+    };
+
+    const handleLogoutClick = async () => {
+      await logout();
+      const localeAccountPath = root.localePath({ name: 'home' });
+      return router.push(localeAccountPath);
     };
 
     const closeSearch = () => {
@@ -170,6 +189,8 @@ export default {
       accountIcon,
       cartTotalItems,
       handleAccountClick,
+      handleLoginClick,
+      handleLogoutClick,
       toggleCartSidebar,
       toggleWishlistSidebar,
       setTermForUrl,

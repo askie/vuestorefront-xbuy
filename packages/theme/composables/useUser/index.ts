@@ -55,6 +55,7 @@ export function useUser(): UseUserInterface {
   };
 
   const logout = async () => {
+    console.log('logout---------');
     const customerStore = useCustomerStore();
     customerStore.setToken(null);
     customerStore.setIsLoggedIn(false);
