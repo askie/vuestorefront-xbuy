@@ -55,7 +55,9 @@ export function useUser(): UseUserInterface {
   };
 
   const logout = async () => {
-
+    const customerStore = useCustomerStore();
+    customerStore.setToken(null);
+    customerStore.setIsLoggedIn(false);
   };
 
   const load = async () => {
@@ -64,16 +66,16 @@ export function useUser(): UseUserInterface {
 
   // eslint-disable-next-line @typescript-eslint/require-await,no-empty-pattern
   const login = async (user: any): Promise<void> => {
-    console.log('login=======', user);
-    const { username, password } = user;
+    const { username, password } = user.user;
+    console.log('login=======', user, username, password);
 
     const data = await app.$vsf.$xbuy.api.Login({ username, password });
     console.log('收到登录结果：', data);
-
-    const customerStore = useCustomerStore();
-    customerStore.setToken(data.token);
-    customerStore.setIsLoggedIn(true);
-
+    if (data && data.token) {
+      const customerStore = useCustomerStore();
+      customerStore.setToken(data.token);
+      customerStore.setIsLoggedIn(true);
+    }
   };
 
   // eslint-disable-next-line consistent-return
