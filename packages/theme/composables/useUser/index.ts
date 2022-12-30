@@ -12,8 +12,8 @@ import type {
 const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context) => {
-    console.log('Mocked: useUser.load');
-    return {};
+    console.log('Mocked: useUser.load -----------');
+    return { token: null };
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -24,25 +24,25 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateUser: async (context: Context, { currentUser, updatedUserData }) => {
     console.log('Mocked: useUser.updateUser');
-    return {};
+    return { token: null };
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   register: async (context: Context, { email, password, firstName, lastName }) => {
     console.log('Mocked: useUser.register');
-    return {};
+    return { token: null };
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   logIn: async (context: Context, { username, password }) => {
     console.log('Mocked: useUser.logIn111111111111111111');
-    return {};
+    return { token: null };
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   changePassword: async (context: Context, { currentUser, currentPassword, newPassword }) => {
     console.log('Mocked: useUser.changePassword');
-    return {};
+    return { token: null };
   }
 };
 
