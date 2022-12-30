@@ -1,8 +1,5 @@
 <template>
   <div>
-    <div>
-      是否登录：{{ isAuthenticated }}
-    </div>
     <SfHeader class="sf-header--has-mobile-search" :class="{ 'header-on-top': isSearchOpen }"
       :isNavVisible="isMobileMenuOpen">
       <!-- TODO: add mobile view buttons after SFUI team PR -->
@@ -21,7 +18,7 @@
         <div v-if="!isAuthenticated" v-e2e="'header-icons'" class="sf-header__icons">
           <SfButton class="sf-button--pure sf-header__action" aria-label="Open account button"
             @click="handleLoginClick">
-            <SfIcon icon="login" size="1.25rem" />
+            <SfIcon icon="profile" size="1.25rem" />
           </SfButton>
         </div>
         <div v-if="isAuthenticated" v-e2e="'header-icons'" class="sf-header__icons">
