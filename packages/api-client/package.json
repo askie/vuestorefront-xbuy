@@ -1,5 +1,5 @@
 {
-  "name": "@vue-storefront/__replace_me__-api",
+  "name": "@vue-storefront/xbuy-api",
   "version": "0.0.1",
   "private": true,
   "sideEffects": false,
@@ -24,7 +24,8 @@
     "update:update": "ncu -u"
   },
   "dependencies": {
-    "@vue-storefront/core": "~2.5.4"
+    "@vue-storefront/core": "~2.5.4",
+    "axios": "0.26.1"
   },
   "devDependencies": {
     "concurrently": "^7.0.0"

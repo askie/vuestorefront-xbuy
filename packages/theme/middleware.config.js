@@ -1,8 +1,12 @@
 module.exports = {
   integrations: {
-    __replace_me__: {
-      location: '@vue-storefront/__replace_me__-api/server',
-      configuration: {}
+    xbuy: {
+      location: '@vue-storefront/xbuy-api/server',
+      configuration: {
+        api: {
+          url: 'http://127.0.0.1:8299'
+        }
+      }
     }
   }
 };

@@ -1,5 +1,5 @@
 {
-  "name": "@vue-storefront/__replace_me__",
+  "name": "@vue-storefront/xbuy",
   "version": "0.0.1",
   "private": true,
   "sideEffects": false,
@@ -23,8 +23,8 @@
     "update:update": "ncu -u"
   },
   "dependencies": {
-    "@vue-storefront/__replace_me__-api": "0.0.1",
-    "@vue-storefront/core": "~2.5.4"
+    "@vue-storefront/core": "~2.5.4",
+    "@vue-storefront/xbuy-api": "0.0.1"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.0.6",
