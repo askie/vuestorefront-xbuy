@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div>
+      是否登录：{{isAuthenticated.value}}
+    </div>
     <SfHeader
       class="sf-header--has-mobile-search"
       :class="{'header-on-top': isSearchOpen}"
@@ -105,8 +108,8 @@
 
 <script>
 import { SfHeader, SfImage, SfIcon, SfButton, SfBadge, SfSearchBar, SfOverlay } from '@storefront-ui/vue';
-import { useUiState } from '~/composables';
-import { useCart, useUser, cartGetters } from '@vue-storefront/xbuy';
+import { useUiState, useUser } from '~/composables';
+import { useCart, cartGetters } from '@vue-storefront/xbuy';
 import { computed, ref, watch,
   onBeforeUnmount
   // useRouter
@@ -211,6 +214,7 @@ export default {
     });
 
     return {
+      isAuthenticated,
       accountIcon,
       cartTotalItems,
       handleAccountClick,

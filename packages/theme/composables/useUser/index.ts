@@ -1,49 +1,105 @@
 import {
-  Context,
-  useUserFactory,
-  UseUserFactoryParams
-} from '@vue-storefront/core';
-import type { User } from '@vue-storefront/xbuy-api';
+  ref,
+  readonly,
+  computed,
+  useContext
+} from '@nuxtjs/composition-api';
+import type { Ref } from '@nuxtjs/composition-api';
 import type {
-  UseUserUpdateParams as UpdateParams,
-  UseUserRegisterParams as RegisterParams
-} from '../types';
+  UseUserInterface,
+  UseUserErrors
+  // UseUserLoadParams,
+  // UseUserLoginParams,
+  // UseUserLogoutParams,
+  // UseUserRegisterParams,
+  // UseUserUpdateUserParams,
+  // UseUserChangePasswordParams,
+} from './useUser';
 
-const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  load: async (context: Context) => {
-    console.log('Mocked: useUser.load -----------');
-    return { token: null };
-  },
+import { useCustomerStore } from '~/stores/customer';
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  logOut: async (context: Context) => {
-    console.log('Mocked: useUser.logOut');
-  },
+/**
+ * Allows loading and manipulating data of the current user.
+ *
+ * See the {@link UseUserInterface} for a list of methods and values available in this composable.
+ */
+export function useUser(): UseUserInterface {
+  const customerStore = useCustomerStore();
+  const { app } = useContext();
+  const loading: Ref<boolean> = ref(false);
+  const errorsFactory = (): UseUserErrors => ({
+    updateUser: null,
+    register: null,
+    login: null,
+    logout: null,
+    changePassword: null,
+    load: null
+  });
+  const error: Ref = ref(errorsFactory());
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  updateUser: async (context: Context, { currentUser, updatedUserData }) => {
-    console.log('Mocked: useUser.updateUser');
-    return { token: null };
-  },
+  const setUser = (newUser: any) => {
+    customerStore.setUser(newUser);
+  };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  register: async (context: Context, { email, password, firstName, lastName }) => {
-    console.log('Mocked: useUser.register');
-    return { token: null };
-  },
+  // const resetErrorValue = () => {
+  //   error.value = errorsFactory();
+  // };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  logIn: async (context: Context, { username, password }) => {
-    console.log('Mocked: useUser.logIn111111111111111111');
-    return { token: null };
-  },
+  // const updateCustomerEmail = async (credentials: { email: string, password: string }): Promise<void> => {
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  changePassword: async (context: Context, { currentUser, currentPassword, newPassword }) => {
-    console.log('Mocked: useUser.changePassword');
-    return { token: null };
-  }
-};
+  // };
 
-export const useUser = useUserFactory<User, UpdateParams, RegisterParams>(params);
+  // eslint-disable-next-line consistent-return
+  const updateUser = async () => {
+
+  };
+
+  const logout = async () => {
+
+  };
+
+  const load = async () => {
+
+  };
+
+  // eslint-disable-next-line @typescript-eslint/require-await,no-empty-pattern
+  const login = async (user: any): Promise<void> => {
+    console.log('login=======', user);
+    const { username, password } = user;
+
+    const data = await app.$vsf.$xbuy.api.Login({ username, password });
+    console.log('收到登录结果：', data);
+
+    const customerStore = useCustomerStore();
+    customerStore.setToken(data.token);
+    customerStore.setIsLoggedIn(true);
+
+  };
+
+  // eslint-disable-next-line consistent-return
+  const register = async (): Promise<void> => {
+
+  };
+
+  // eslint-disable-next-line consistent-return
+  const changePassword = async () => {
+
+  };
+
+  return {
+    setUser,
+    updateUser,
+    register,
+    login,
+    logout,
+    changePassword,
+    load,
+    loading: readonly(loading),
+    error: readonly(error),
+    user: computed(() => customerStore.user),
+    isAuthenticated: computed(() => customerStore.isLoggedIn)
+  };
+}
+
+export default useUser;
+export * from './useUser';

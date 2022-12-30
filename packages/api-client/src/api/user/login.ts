@@ -1,6 +1,6 @@
 import { Context, CustomQuery } from '@vue-storefront/core';
 type LoginResponse = {
-    data: any;
+  token: string;
 }
 
 export async function Login(context: Context, parms: CustomQuery): Promise<LoginResponse> {

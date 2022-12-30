@@ -1,12 +1,14 @@
 import { defineStore } from 'pinia';
 
 interface CustomerState {
+  user: null,
   token: null,
   isLoggedIn: boolean,
 }
 
 export const useCustomerStore = defineStore('customer', {
   state: (): CustomerState => ({
+    user: null,
     token: null,
     isLoggedIn: false
   }),
@@ -16,6 +18,9 @@ export const useCustomerStore = defineStore('customer', {
     },
     setToken(token: string) {
       this.token = token;
+    },
+    setUser(user: any) {
+      this.user = user;
     }
   },
   persist: {
