@@ -1,10 +1,10 @@
-import { Store } from '@vue-storefront/__replace_me__-api';
+import { Store } from '@vue-storefront/xbuy-api';
 import { Context, useStoreFactory } from '@vue-storefront/core';
 
 export const useStore = useStoreFactory<Store>({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load(context: Context, params) {
-    console.log('Mocked: useStore.load');
+    console.log('Mocked: useStore.load 111111111');
 
     return Promise.resolve({});
   },

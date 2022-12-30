@@ -15,13 +15,18 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./*"],
-      "@/*": ["./*"]
+      "~/*": [
+        "./*"
+      ],
+      "@/*": [
+        "./*"
+      ]
     },
     "types": [
       "@types/node",
       "@nuxt/types",
-      "nuxt-i18n"
+      "nuxt-i18n",
+      "@pinia/nuxt"
     ],
     "resolveJsonModule": true,
     "rootDir": "./",

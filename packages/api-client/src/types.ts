@@ -1,6 +1,11 @@
 export type TODO = unknown;
 
-export type Setttings = TODO;
+export type Setttings = {
+    client
+    api: {
+        url: string;
+    }
+};
 
 export type Endpoints = TODO;
 
@@ -32,7 +37,10 @@ export type Review = TODO;
 
 export type ReviewItem = TODO;
 
-export type User = TODO;
+export type User = {
+    value: string;
+    token: null,
+};
 
 export type UserBillingAddress = TODO;
 

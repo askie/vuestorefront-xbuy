@@ -36,12 +36,15 @@ export default {
   loading: { color: '#fff' },
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [
+    { src: '~/plugins/pinia-plugin-persist.client', mode: 'client', ssr: false },
+  ],
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     // to core
     '@nuxtjs/composition-api/module',
+    '@pinia/nuxt',
     '@nuxt/typescript-build',
     '@nuxtjs/style-resources',
     ['@vue-storefront/nuxt', {
@@ -50,11 +53,11 @@ export default {
       // @core-development-only-end
       useRawSource: {
         dev: [
-          '@vue-storefront/__replace_me__',
+          '@vue-storefront/xbuy',
           '@vue-storefront/core'
         ],
         prod: [
-          '@vue-storefront/__replace_me__',
+          '@vue-storefront/xbuy',
           '@vue-storefront/core'
         ]
       }
@@ -63,8 +66,8 @@ export default {
     ['@vue-storefront/nuxt-theme', {
       generate: {
         replace: {
-          apiClient: '@vue-storefront/__replace_me__-api',
-          composables: '@vue-storefront/__replace_me__'
+          apiClient: '@vue-storefront/xbuy-api',
+          composables: '@vue-storefront/xbuy'
         }
       }
     }],
@@ -72,7 +75,7 @@ export default {
     /* project-only-start
     ['@vue-storefront/nuxt-theme'],
     project-only-end */
-    ['@vue-storefront/__replace_me__/nuxt', {}]
+    ['@vue-storefront/xbuy/nuxt', {}]
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -82,7 +85,8 @@ export default {
     }],
     'cookie-universal-nuxt',
     'vue-scrollto/nuxt',
-    '@vue-storefront/middleware/nuxt'
+    '@vue-storefront/middleware/nuxt',
+    '@pinia/nuxt',
   ],
 
   i18n: {
@@ -130,6 +134,13 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    extend(config) {
+      config.module.rules.push({
+        test: /\.mjs$/,
+        include: /node_modules/,
+        type: 'javascript/auto',
+      })
+    },
     transpile: [
       'vee-validate/dist/rules'
     ],
