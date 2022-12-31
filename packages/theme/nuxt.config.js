@@ -38,6 +38,9 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     { src: '~/plugins/pinia-plugin-persist.client', mode: 'client', ssr: false },
+    { src: '~/plugins/context' },
+    { src: '~/plugins/token' },
+    { src: '~/plugins/api-error' },
   ],
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules

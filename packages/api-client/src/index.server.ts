@@ -1,32 +1,8 @@
-import { apiClientFactory, ApiClientExtension } from '@vue-storefront/core';
+import { apiClientFactory } from '@vue-storefront/core';
 import type { Endpoints } from './types';
 import axios from 'axios';
 import { getProduct } from './api/getProduct';
 import { login } from './api/user/login';
-
-type ConfigState = {
-  getCartId(): string;
-  setCartId(id?: string | null): void;
-  removeCartId(): void;
-  getCustomerToken(): string;
-  setCustomerToken(token?: string | null): void;
-  removeCustomerToken(): void;
-  getStore(): string;
-  setStore(id?: string | null): void;
-  removeStore(): void;
-  getCurrency(): string;
-  setCurrency(id?: string | null): void;
-  removeCurrency(): void;
-  getLocale(): string;
-  setLocale(id?: string | null): void;
-  removeLocale(): void;
-  getCountry(): string;
-  setCountry(id?: string | null): void;
-  removeCountry(): void;
-  getMessage<T>(): T;
-  setMessage<T>(id?: T | null): void;
-  removeMessage(): void;
-};
 
 interface ClientConfig {
   client: any;
@@ -42,11 +18,11 @@ interface ClientConfig {
   externalCheckout: {
     enable: boolean;
   };
-  state: ConfigState;
 }
 
 const defaultSettings: ClientConfig = {
   api: '',
+  client: null,
   cookies: {
     currencyCookieName: 'vsf-currency',
     countryCookieName: 'vsf-country',
@@ -55,39 +31,17 @@ const defaultSettings: ClientConfig = {
     customerCookieName: 'vsf-customer',
     storeCookieName: 'vsf-store'
   },
-  state: {
-    getCartId: () => '',
-    setCartId: () => { },
-    getCustomerToken: () => '',
-    setCustomerToken: () => { },
-    getStore: () => '',
-    setStore: () => { },
-    getCurrency: () => '',
-    setCurrency: () => { },
-    getLocale: () => '',
-    setLocale: () => { },
-    getCountry: () => '',
-    setCountry: () => { },
-    setMessage: () => { },
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    getMessage: () => ({})
-  },
   externalCheckout: {
-    enable: false,
-    syncUrlPath: '/vue/cart/sync',
-    stores: {},
-    cmsUrl: ''
+    enable: false
   }
 };
 
-const buildConfig = (settings: any) => ({
+const buildConfig = (settings: ClientConfig) => ({
   ...defaultSettings,
-  ...settings,
-  state: settings.state || defaultSettings.state
+  ...settings
 });
 
-const init = (settings: ClientConfig): any => {
+const init = (settings: ClientConfig): { config: ClientConfig; client: any } => {
   const config = buildConfig(settings);
 
   if (config.client) {
@@ -101,10 +55,6 @@ const init = (settings: ClientConfig): any => {
     baseURL: config.api.url
   });
 
-  console.log('2222222', {
-    config: config,
-    client
-  });
   return {
     config: config,
     client
@@ -117,62 +67,7 @@ const onCreate = (settings: ClientConfig): { config: ClientConfig; client: any }
   }
 
   const config = buildConfig(settings);
-
-  return { config, client: settings.client };
-};
-
-const tokenExtension: ApiClientExtension = {
-  name: 'tokenExtension',
-  hooks: (req, res) => ({
-    beforeCreate: ({ configuration }) => {
-      console.log('1111111111111111111', configuration);
-      const cartCookieName: string = configuration.cookies?.cartCookieName || defaultSettings.cookies.cartCookieName;
-      const customerCookieName: string = configuration.cookies?.customerCookieName || defaultSettings.cookies.customerCookieName;
-      const storeCookieName: string = configuration.cookies?.storeCookieName || defaultSettings.cookies.storeCookieName;
-      const currencyCookieName: string = configuration.cookies?.currencyCookieName || defaultSettings.cookies.currencyCookieName;
-
-      return {
-        ...configuration,
-        state: {
-          getCartId: () => req.cookies[cartCookieName],
-          setCartId: (id) => {
-            if (!id) {
-              delete req.cookies[cartCookieName];
-              return;
-            }
-            res.cookie(cartCookieName, JSON.stringify(id));
-          },
-          getCustomerToken: () => req.cookies[customerCookieName],
-          setCustomerToken: (token) => {
-            console.log('setCustomerToken', token);
-            if (!token) {
-              delete req.cookies[customerCookieName];
-              return;
-            }
-            res.cookie(customerCookieName, JSON.stringify(token));
-          },
-          getStore: () => req.cookies[storeCookieName],
-          setStore: (id) => {
-            if (!id) {
-              // eslint-disable-next-line no-param-reassign
-              delete req.cookies[storeCookieName];
-              return;
-            }
-            res.cookie(storeCookieName, JSON.stringify(id));
-          },
-          getCurrency: () => req.cookies[currencyCookieName],
-          setCurrency: (id) => {
-            if (!id) {
-              // eslint-disable-next-line no-param-reassign
-              delete req.cookies[currencyCookieName];
-              return;
-            }
-            res.cookie(currencyCookieName, JSON.stringify(id));
-          }
-        }
-      };
-    }
-  })
+  return { config, client: config.client };
 };
 
 const { createApiClient } = apiClientFactory<ClientConfig, Endpoints>({
@@ -180,8 +75,8 @@ const { createApiClient } = apiClientFactory<ClientConfig, Endpoints>({
   api: {
     getProduct,
     login
-  },
-  extensions: [tokenExtension]
+  }
+  // extensions: [tokenExtension]
 });
 
 export {

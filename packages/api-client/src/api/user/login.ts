@@ -19,5 +19,5 @@ export async function login(context: Context, parms: CustomQuery): Promise<Login
   console.log('登录结果：', data);
 
   // Return data from the API
-  return data.data;
+  return data;
 }

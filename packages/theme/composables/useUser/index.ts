@@ -59,6 +59,7 @@ export function useUser(): UseUserInterface {
     const customerStore = useCustomerStore();
     customerStore.setToken(null);
     customerStore.setIsLoggedIn(false);
+    customerStore.setUser(null);
   };
 
   const load = async () => {
@@ -70,20 +71,17 @@ export function useUser(): UseUserInterface {
     try {
       loading.value = true;
       const { username, password } = user.user;
-      const data = await app.$vsf.$xbuy.api.login({ username, password });
-      console.log('收到登录结果：', data);
+      const res = await app.$vsf.$xbuy.api.login({ username, password });
+      // console.log('收到登录结果：', res);
 
-      if (data && data.token) {
+      if (res && res.data && res.data.token) {
         const customerStore = useCustomerStore();
-        customerStore.setToken(data.token);
+        customerStore.setToken(res.data.token);
         customerStore.setIsLoggedIn(true);
-
-        console.log('aaaaaa', app, app.context.$vsf.$xbuy);
-        const apiState = app.$vsf.$xbuy.config.state;
-        console.log('zzzzz', apiState);
-
-        apiState.setCustomerToken(data.token);
+      } else {
+        throw new Error(res.message);
       }
+      error.value.login = null;
     } catch (err) {
       error.value.login = err;
     } finally {

@@ -127,6 +127,11 @@ export default {
       toggleLoginModal();
     };
 
+    // 测试用直接打开登录窗口
+    setTimeout(() => {
+      toggleLoginModal();
+    }, 1000);
+
     const handleLoginClick = async () => {
       toggleLoginModal();
     };

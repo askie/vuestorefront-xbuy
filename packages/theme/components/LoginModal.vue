@@ -180,7 +180,7 @@ export default {
 
     watch(isLoginModalOpen, () => {
       if (isLoginModalOpen) {
-        form.value = {};
+        form.value = { username: 'test@qq.com', password: '1234' };
         resetErrorValues();
       }
     });
