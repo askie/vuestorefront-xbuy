@@ -60,6 +60,8 @@ export function useUser(): UseUserInterface {
     customerStore.setToken(null);
     customerStore.setIsLoggedIn(false);
     customerStore.setUser(null);
+    // 返回首页
+    app.router.push(app.localePath('/'));
   };
 
   const load = async () => {
@@ -67,11 +69,11 @@ export function useUser(): UseUserInterface {
   };
 
   // eslint-disable-next-line @typescript-eslint/require-await,no-empty-pattern
-  const login = async (user: any): Promise<void> => {
+  const login = async ({ user }): Promise<void> => {
     try {
       loading.value = true;
-      const { username, password } = user.user;
-      const res = await app.$vsf.$xbuy.api.login({ username, password });
+      const { username, password } = user;
+      const res = await app.$vsf.$xbuy.api.customLogin({ username, password });
       // console.log('收到登录结果：', res);
 
       if (res && res.data && res.data.token) {
@@ -90,8 +92,24 @@ export function useUser(): UseUserInterface {
   };
 
   // eslint-disable-next-line consistent-return
-  const register = async (): Promise<void> => {
+  const register = async ({ user }): Promise<void> => {
+    try {
+      loading.value = true;
+      const res = await app.$vsf.$xbuy.api.customRegister(user);
+      console.log('注册结果：', res);
 
+      if (res && res.data && res.data.member_id) {
+        // 自动登录
+        await login({ user: { username: user.email, password: user.password } });
+      } else {
+        throw new Error(res.message);
+      }
+      error.value.register = null;
+    } catch (err) {
+      error.value.register = err;
+    } finally {
+      loading.value = false;
+    }
   };
 
   // eslint-disable-next-line consistent-return

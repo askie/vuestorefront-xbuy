@@ -1,8 +1,7 @@
 import { apiClientFactory } from '@vue-storefront/core';
 import type { Endpoints } from './types';
 import axios from 'axios';
-import { getProduct } from './api/getProduct';
-import { login } from './api/user/login';
+import * as api from './api';
 
 interface ClientConfig {
   client: any;
@@ -72,11 +71,7 @@ const onCreate = (settings: ClientConfig): { config: ClientConfig; client: any }
 
 const { createApiClient } = apiClientFactory<ClientConfig, Endpoints>({
   onCreate,
-  api: {
-    getProduct,
-    login
-  }
-  // extensions: [tokenExtension]
+  api
 });
 
 export {
